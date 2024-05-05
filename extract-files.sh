@@ -63,18 +63,8 @@ function blob_fixup() {
     product/etc/sysconfig/nexus.xml)
         sed -i 's/qulacomm/qualcomm/' "${2}"
         ;;
-    # Fix missing symbols for IMS/Camera
-    lib/lib-imsvideocodec.so | lib/libimsmedia_jni.so | lib64/lib-imsvideocodec.so | lib64/libimsmedia_jni.so)
-        for LIBGUI_SHIM in $(grep -L "libgui_shim.so" "${2}"); do
-            "${PATCHELF}" --add-needed "libgui_shim.so" "${LIBGUI_SHIM}"
-        done
-        ;;
     vendor/bin/pm-service)
         grep -q libutils-v33.so "${2}" || "${PATCHELF}" --add-needed "libutils-v33.so" "${2}"
-        ;;
-    # Fix missing symbol _ZN7android8hardware7details17gBnConstructorMapE
-    lib*/com.qualcomm.qti.imsrtpservice@1.0.so | vendor/bin/cnd | vendor/bin/ims_rtp_daemon | vendor/bin/imsrcsd | vendor/bin/netmgrd | vendor/lib*/com.quicinc.cne.api@1.0.so)
-        "${PATCHELF}" --replace-needed "libhidlbase.so" "libhidlbase-v32.so" "${2}"
         ;;
     esac
 }
@@ -84,6 +74,7 @@ setup_vendor "${DEVICE}" "${VENDOR}" "${ANDROID_ROOT}" false "${CLEAN_VENDOR}"
 
 if [ -z "${ONLY_FIRMWARE}" ]; then
   extract "${MY_DIR}/lineage-proprietary-files.txt" "${SRC}" "${KANG}" --section "${SECTION}"
+  extract "${MY_DIR}/lineage-proprietary-files-radio.txt" "${SRC}" "${KANG}" --section "${SECTION}"
   extract "${MY_DIR}/lineage-proprietary-files-vendor.txt" "${SRC}" "${KANG}" --section "${SECTION}"
 fi
 

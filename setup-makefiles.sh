@@ -32,6 +32,7 @@ write_headers
 
 write_makefiles "${MY_DIR}/lineage-proprietary-files.txt" true
 write_makefiles "${MY_DIR}/lineage-proprietary-files-vendor.txt" true
+write_makefiles "${MY_DIR}/lineage-proprietary-files-radio.txt" true
 
 append_firmware_calls_to_makefiles "${MY_DIR}/proprietary-firmware.txt"
 
